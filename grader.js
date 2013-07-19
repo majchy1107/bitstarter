@@ -1,7 +1,10 @@
+#!/usr/bin/env node
+
 var fs = require('fs');
 var program = require('commander');
 var cheerio = require('cheerio');
 var HTMLFILE_DEFAULT = "index.html";
+var filecheck = "filecheck.html";
 var rest = require('restler');
 var util = require('util');
 
@@ -51,8 +54,9 @@ if (require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists),CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-        .option('-u, --url <url_file>','URL',clone(assertFileExists),URL_DEFAULT)
+        .option('-u, --url <url_file>','URL')
         .parse(process.argv);
+
     if (program.url) {
 	rest.get(program.url).on('complete',function(result,response) {
 	    if (result instanceof Error) {
@@ -65,6 +69,7 @@ if (require.main == module) {
 		    });
 	    }});
     } else {
+	console.log(program.file);
 	outChecks(program.file,program.checks);
     }
 
